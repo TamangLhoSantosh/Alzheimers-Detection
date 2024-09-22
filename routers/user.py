@@ -14,7 +14,7 @@ get_db = database.get_db
     status_code=status.HTTP_201_CREATED,
     response_model=schemas.UserBase,
 )
-def create_user(request: schemas.UserBase, db: Session = Depends(get_db)):
+def create_user(request: schemas.UserCreate, db: Session = Depends(get_db)):
     return user.create(request, db)
 
 
