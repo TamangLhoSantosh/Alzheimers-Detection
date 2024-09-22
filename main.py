@@ -1,8 +1,12 @@
 from fastapi import FastAPI
+import models
+from database import engine
+from routers import user, authenticate
 
 app = FastAPI()
 
+models.Base.metadata.create_all(engine)
 
-@app.get("/")
-def index():
-    return {"message": "Hello World"}
+app.include_router(user.router)
+
+app.include_router(authenticate.router)
