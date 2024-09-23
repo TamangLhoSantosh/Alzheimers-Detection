@@ -29,3 +29,10 @@ class Token(BaseModel):
 
 class TokenData(BaseModel):
     email: Optional[str] = None
+
+
+class Hospital(BaseModel):
+    name: str
+    address: str
+    contact: str
+    email: Optional[str] = None
