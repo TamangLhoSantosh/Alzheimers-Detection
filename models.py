@@ -27,4 +27,4 @@ class Hospital(Base):
     name = Column(String(100), nullable=False)
     address = Column(String(100), nullable=False)
     contact = Column(String(100), nullable=False)
-    email = Column(String(100), unique=True, index=True)
+    email = Column(String(100), unique=True, index=True, nullable=True)

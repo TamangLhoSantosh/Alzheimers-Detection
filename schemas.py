@@ -31,8 +31,15 @@ class TokenData(BaseModel):
     email: Optional[str] = None
 
 
-class Hospital(BaseModel):
+class HospitalBase(BaseModel):
     name: str
     address: str
     contact: str
     email: Optional[str] = None
+
+
+class Hospital(HospitalBase):
+    id: int
+
+    class Config:
+        from_attributes = True

@@ -1,7 +1,7 @@
 from fastapi import FastAPI
 import models
 from database import engine
-from routers import user, authenticate
+from routers import user, authenticate, hospital
 
 app = FastAPI()
 
@@ -10,3 +10,5 @@ models.Base.metadata.create_all(engine)
 app.include_router(user.router)
 
 app.include_router(authenticate.router)
+
+app.include_router(hospital.router)
