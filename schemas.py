@@ -1,5 +1,6 @@
-from typing import Optional
+from typing import Optional, List
 from pydantic import BaseModel
+from datetime import datetime
 
 
 class UserBase(BaseModel):
@@ -11,10 +12,8 @@ class UserBase(BaseModel):
     contact: str
     address: str
     email: str
-
-
-class UserCreate(UserBase):
-    password: str
+    is_admin: bool
+    is_hospital_admin: bool
 
 
 class Login(BaseModel):
@@ -40,6 +39,16 @@ class HospitalBase(BaseModel):
 
 class Hospital(HospitalBase):
     id: int
+    created_at: datetime
+    users: Optional[List[UserBase]] = None
+
+    class Config:
+        from_attributes = True
+
+
+class UserCreate(UserBase):
+    password: str
+    hospital_id: Optional[int] = None
 
     class Config:
         from_attributes = True
