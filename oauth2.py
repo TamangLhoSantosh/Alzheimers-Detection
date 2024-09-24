@@ -20,7 +20,6 @@ def get_admin_user(
     current_user=Depends(get_current_user),
     db: Session = Depends(database.get_db),
 ):
-    print(current_user.email)
     user = db.query(models.User).filter(models.User.email == current_user.email).first()
     if not user.is_admin:
         raise HTTPException(
