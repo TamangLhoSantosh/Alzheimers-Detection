@@ -11,7 +11,7 @@ get_db = database.get_db
 @router.get("/", response_model=List[schemas.Hospital])
 def get_hospitals(
     db: Session = Depends(get_db),
-    current_user: schemas.UserBase = Depends(oauth2.get_current_user),
+    current_user: schemas.UserBase = Depends(oauth2.get_admin_user),
 ):
     return hospital.get_all(db)
 
@@ -20,7 +20,7 @@ def get_hospitals(
 def create_hospital(
     request: schemas.HospitalCreate,
     db: Session = Depends(get_db),
-    current_user: schemas.UserBase = Depends(oauth2.get_current_user),
+    current_user: schemas.UserBase = Depends(oauth2.get_admin_user),
 ):
     return hospital.create(request, db)
 
@@ -39,7 +39,7 @@ def update_hospital(
     id: int,
     request: schemas.Hospital,
     db: Session = Depends(get_db),
-    current_user: schemas.UserBase = Depends(oauth2.get_current_user),
+    current_user: schemas.UserBase = Depends(oauth2.get_admin_user),
 ):
     return hospital.update(request, db)
 
@@ -48,6 +48,6 @@ def update_hospital(
 def delete_hospital(
     id: int,
     db: Session = Depends(get_db),
-    current_user: schemas.UserBase = Depends(oauth2.get_current_user),
+    current_user: schemas.UserBase = Depends(oauth2.get_admin_user),
 ):
     return hospital.delete(id, db)
