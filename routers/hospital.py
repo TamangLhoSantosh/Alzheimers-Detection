@@ -18,7 +18,7 @@ def get_hospitals(
 
 @router.post("/", status_code=status.HTTP_201_CREATED)
 def create_hospital(
-    request: schemas.HospitalBase,
+    request: schemas.HospitalCreate,
     db: Session = Depends(get_db),
     current_user: schemas.UserBase = Depends(oauth2.get_current_user),
 ):

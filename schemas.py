@@ -12,8 +12,23 @@ class UserBase(BaseModel):
     contact: str
     address: str
     email: str
+
+
+class UserCreate(UserBase):
     is_admin: bool
     is_hospital_admin: bool
+    password: str
+    hospital_id: Optional[int] = None
+
+
+class UserShow(UserBase):
+    id: int
+    is_admin: bool
+    is_hospital_admin: bool
+    hospital_id: Optional[int] = None
+
+    class Config:
+        from_attributes = True
 
 
 class Login(BaseModel):
@@ -37,18 +52,14 @@ class HospitalBase(BaseModel):
     email: Optional[str] = None
 
 
+class HospitalCreate(HospitalBase):
+    pass
+
+
 class Hospital(HospitalBase):
     id: int
     created_at: datetime
-    users: Optional[List[UserBase]] = None
-
-    class Config:
-        from_attributes = True
-
-
-class UserCreate(UserBase):
-    password: str
-    hospital_id: Optional[int] = None
+    users: Optional[List[UserShow]] = []
 
     class Config:
         from_attributes = True

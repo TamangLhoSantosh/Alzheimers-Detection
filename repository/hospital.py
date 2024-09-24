@@ -8,7 +8,7 @@ def get_all(db: Session):
     return hospitals
 
 
-def create(request: schemas.Hospital, db: Session):
+def create(request: schemas.HospitalCreate, db: Session):
     hospital = (
         db.query(models.Hospital).filter(models.Hospital.name == request.name).first()
     )
