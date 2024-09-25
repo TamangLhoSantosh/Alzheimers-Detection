@@ -8,6 +8,7 @@ class UserBase(BaseModel):
     first_name: str
     middle_name: str
     last_name: str
+    dob: datetime
     gender: str
     contact: str
     address: str
@@ -60,6 +61,29 @@ class Hospital(HospitalBase):
     id: int
     created_at: datetime
     users: Optional[List[UserShow]] = []
+
+    class Config:
+        from_attributes = True
+
+
+class PatientBase(BaseModel):
+    first_name: str
+    middle_name: Optional[str]
+    last_name: str
+    dob: datetime
+    gender: str
+    contact: str
+    address: str
+
+
+class PatientCreate(PatientBase):
+    hospital_id: int
+    user_id: int
+
+
+class Patient(PatientBase):
+    id: int
+    created_at: datetime
 
     class Config:
         from_attributes = True
