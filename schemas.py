@@ -87,3 +87,19 @@ class Patient(PatientBase):
 
     class Config:
         from_attributes = True
+
+
+class TestImageBase(BaseModel):
+    image: str
+    patient_id: str
+
+
+class TestImageCreate(TestImageBase):
+    pass
+
+
+class TestImage(TestImageBase):
+    id: str
+
+    class Config:
+        from_attributes = True
