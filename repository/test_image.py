@@ -7,7 +7,7 @@ from save_image import save
 def create(db: Session, image: UploadFile, patient_id: int):
     image_path = save(image, "media/images/test_images")
     new_test_image = models.TestImage(
-        image=image_path,
+        image_url=image_path,
         patient_id=patient_id,
     )
     db.add(new_test_image)
