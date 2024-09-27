@@ -4,7 +4,7 @@ from sqlalchemy.orm import Session
 from repository import patient
 import schemas, database, oauth2
 
-router = APIRouter(prefix="/hospital/{hospital_id}/patient", tags=["patients"])
+router = APIRouter(prefix="/hospital/{hospital_id}/patient", tags=["Patients"])
 get_db = database.get_db
 
 
