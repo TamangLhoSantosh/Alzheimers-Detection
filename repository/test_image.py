@@ -4,9 +4,7 @@ import schemas, models
 from save_image import save
 
 
-def create(
-    request: schemas.TestImageCreate, db: Session, image: UploadFile, patient_id: int
-):
+def create(db: Session, image: UploadFile, patient_id: int):
     image_path = save(image, "media/images/test_images")
     new_test_image = models.TestImage(
         image=image_path,
