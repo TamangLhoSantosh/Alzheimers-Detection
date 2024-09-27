@@ -33,6 +33,7 @@ def create(request: schemas.UserCreate, db: Session):
         first_name=request.first_name,
         middle_name=request.middle_name,
         last_name=request.last_name,
+        dob=request.dob,
         gender=request.gender,
         contact=request.contact,
         address=request.address,
