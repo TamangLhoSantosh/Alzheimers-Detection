@@ -14,7 +14,6 @@ get_db = database.get_db
 @router.post(
     "/",
     status_code=status.HTTP_201_CREATED,
-    response_model=schemas.TestImage,
 )
 def upload_test_image(
     hospital_id: int,

@@ -77,8 +77,7 @@ class PatientBase(BaseModel):
 
 
 class PatientCreate(PatientBase):
-    hospital_id: int
-    user_id: int
+    pass
 
 
 class Patient(PatientBase):

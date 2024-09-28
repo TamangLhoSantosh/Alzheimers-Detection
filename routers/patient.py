@@ -18,11 +18,12 @@ def get_patients(
 
 @router.post("/", status_code=status.HTTP_201_CREATED)
 def create_patient(
+    hospital_id: int,
     request: schemas.PatientCreate,
     db: Session = Depends(get_db),
     current_user: schemas.UserBase = Depends(oauth2.get_current_user),
 ):
-    return patient.create(request, db)
+    return patient.create(hospital_id, current_user, request, db)
 
 
 @router.get("/{id}", response_model=schemas.Patient)

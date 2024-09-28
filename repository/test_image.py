@@ -4,8 +4,9 @@ import schemas, models
 from save_image import save
 
 
-def create(db: Session, image: UploadFile, patient_id: int):
-    image_path = save(image, "media/images/test_images")
+async def create(db: Session, image: UploadFile, patient_id: int):
+    image_path = await save(image, "media/images/test_images")
+    print(image_path)
     new_test_image = models.TestImage(
         image_url=image_path,
         patient_id=patient_id,
