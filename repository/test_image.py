@@ -1,12 +1,11 @@
 from fastapi import HTTPException, UploadFile
 from sqlalchemy.orm import Session
-import schemas, models
+import models
 from save_image import save
 
 
 async def create(db: Session, image: UploadFile, patient_id: int):
     image_path = await save(image, "media/images/test_images")
-    print(image_path)
     new_test_image = models.TestImage(
         image_url=image_path,
         patient_id=patient_id,

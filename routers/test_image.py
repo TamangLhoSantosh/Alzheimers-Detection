@@ -15,13 +15,13 @@ get_db = database.get_db
     "/",
     status_code=status.HTTP_201_CREATED,
 )
-def upload_test_image(
+async def upload_test_image(
     hospital_id: int,
     patient_id: int,
     image: UploadFile,
     db: Session = Depends(get_db),
 ):
-    return test_image.create(db, image, patient_id)
+    return await test_image.create(db, image, patient_id)
 
 
 @router.get("/", response_model=list[schemas.TestImage])
