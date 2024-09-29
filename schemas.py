@@ -102,3 +102,19 @@ class TestImage(TestImageBase):
 
     class Config:
         from_attributes = True
+
+
+class ResultImageBase(BaseModel):
+    image: str
+    test_image_id: str
+
+
+class ResultImageCreate(ResultImageBase):
+    pass
+
+
+class ResultImage(ResultImageBase):
+    id: str
+
+    class Config:
+        from_attributes = True
