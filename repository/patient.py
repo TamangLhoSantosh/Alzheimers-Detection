@@ -8,7 +8,12 @@ def get_all(db: Session):
     return patients
 
 
-def create(request: schemas.PatientCreate, db: Session):
+def create(
+    hospital_id: int,
+    current_user: schemas.UserShow,
+    request: schemas.PatientCreate,
+    db: Session,
+):
     new_patient = models.Patient(
         first_name=request.first_name,
         middle_name=request.middle_name,
@@ -17,6 +22,8 @@ def create(request: schemas.PatientCreate, db: Session):
         gender=request.gender,
         contact=request.contact,
         address=request.address,
+        hospital_id=hospital_id,
+        user_id=current_user.id,
     )
     db.add(new_patient)
     db.commit()

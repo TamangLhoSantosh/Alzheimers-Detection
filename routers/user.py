@@ -1,4 +1,3 @@
-from typing import List
 from fastapi import APIRouter, Depends, status
 from sqlalchemy.orm import Session
 from repository import user
@@ -24,5 +23,4 @@ def show_user(
     db: Session = Depends(get_db),
     current_user: schemas.UserBase = Depends(oauth2.get_current_user),
 ):
-    print(current_user)
     return user.show(db, id)
