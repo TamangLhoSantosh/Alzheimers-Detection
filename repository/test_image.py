@@ -33,4 +33,4 @@ def get_test_images(db: Session, patient_id: int):
         .filter(models.TestImage.patient_id == patient_id)
         .all()
     )
-    return test_images
+    return FileResponse(test_image.image_url)
