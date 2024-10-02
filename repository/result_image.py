@@ -22,6 +22,6 @@ def get_result_images(db: Session, result_image_id: int):
     result_images = (
         db.query(models.ResultImage)
         .filter(models.ResultImage.id == result_image_id)
-        .all()
+        .first()
     )
-    return result_images
+    return result_images.image_url

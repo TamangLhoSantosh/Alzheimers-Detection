@@ -24,7 +24,7 @@ def show(db: Session, id: int):
         raise HTTPException(
             status_code=404, detail=f"Test Image with id {id} not found"
         )
-    return FileResponse(test_image.image_url)
+    return test_image.image_url
 
 
 def get_test_images(db: Session, patient_id: int):
@@ -33,4 +33,4 @@ def get_test_images(db: Session, patient_id: int):
         .filter(models.TestImage.patient_id == patient_id)
         .all()
     )
-    return FileResponse(test_image.image_url)
+    return test_images
