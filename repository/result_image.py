@@ -1,4 +1,4 @@
-from fastapi import HTTPException, UploadFile
+from fastapi import UploadFile
 from sqlalchemy.orm import Session
 import models
 from save_image import save
