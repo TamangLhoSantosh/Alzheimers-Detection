@@ -89,8 +89,8 @@ class Patient(PatientBase):
 
 
 class TestImageBase(BaseModel):
-    image: str
-    patient_id: str
+    image_url: str
+    patient_id: int
 
 
 class TestImageCreate(TestImageBase):
@@ -98,15 +98,15 @@ class TestImageCreate(TestImageBase):
 
 
 class TestImage(TestImageBase):
-    id: str
+    id: int
 
     class Config:
         from_attributes = True
 
 
 class ResultImageBase(BaseModel):
-    image: str
-    test_image_id: str
+    image_url: str
+    test_image_id: int
 
 
 class ResultImageCreate(ResultImageBase):
@@ -114,7 +114,7 @@ class ResultImageCreate(ResultImageBase):
 
 
 class ResultImage(ResultImageBase):
-    id: str
+    id: int
 
     class Config:
         from_attributes = True

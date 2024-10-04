@@ -17,6 +17,7 @@ get_db = database.get_db
 )
 async def upload_result_image(
     hospital_id: int,
+    patient_id: int,
     test_image_id: int,
     image: UploadFile,
     db: Session = Depends(get_db),
@@ -26,6 +27,9 @@ async def upload_result_image(
 
 @router.get("/{id}", response_model=schemas.ResultImage)
 def show_result_image(
+    hospital_id: int,
+    patient_id: int,
+    test_image_id: int,
     id: int,
     db: Session = Depends(get_db),
 ):

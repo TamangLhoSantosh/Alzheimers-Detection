@@ -24,7 +24,7 @@ def show(db: Session, id: int):
         raise HTTPException(
             status_code=404, detail=f"Test Image with id {id} not found"
         )
-    return test_image.image_url
+    return test_image
 
 
 def get_test_images(db: Session, patient_id: int):
