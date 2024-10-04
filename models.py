@@ -77,3 +77,14 @@ class TestImage(Base):
     patient_id = Column(Integer, ForeignKey("patients.id"), nullable=False)
 
     patient = relationship("Patient", back_populates="test_images")
+    result_images = relationship("ResultImage", back_populates="test_image")
+
+
+class ResultImage(Base):
+    __tablename__ = "result_images"
+
+    id = Column(Integer, primary_key=True, index=True)
+    image_url = Column(String(2048), nullable=False)
+    test_image_id = Column(Integer, ForeignKey("test_images.id"), nullable=False)
+
+    test_image = relationship("TestImage", back_populates="result_images")
