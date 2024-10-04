@@ -21,6 +21,7 @@ async def upload_result_image(
     test_image_id: int,
     image: UploadFile,
     db: Session = Depends(get_db),
+    current_user: schemas.UserShow = Depends(oauth2.get_current_user),
 ):
     return await result_image.create(db, image, test_image_id)
 
@@ -32,5 +33,6 @@ def show_result_image(
     test_image_id: int,
     id: int,
     db: Session = Depends(get_db),
+    current_user: schemas.UserShow = Depends(oauth2.get_current_user),
 ):
     return result_image.get_result_images(db, id)
