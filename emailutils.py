@@ -1,11 +1,15 @@
+import os
+
 import aiosmtplib
 from email.message import EmailMessage
-import config
+from dotenv import load_dotenv
 
-EMAIL_HOST = config.EMAIL_HOST
-EMAIL_PORT = config.EMAIL_PORT
-EMAIL_USER = config.EMAIL_USER
-EMAIL_PASSWORD = config.EMAIL_PASSWORD
+load_dotenv()
+
+EMAIL_HOST = os.getenv("EMAIL_HOST")
+EMAIL_PORT = os.getenv("EMAIL_PORT")
+EMAIL_USER = os.getenv("EMAIL_USER")
+EMAIL_PASSWORD = os.getenv("EMAIL_PASSWORD")
 
 
 async def send_verification_email(email: str, token: str):
