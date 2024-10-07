@@ -1,8 +1,9 @@
 import os
 
-import aiosmtplib
+import smtplib
 from email.message import EmailMessage
 from dotenv import load_dotenv
+import ssl
 
 load_dotenv()
 
@@ -22,11 +23,8 @@ async def send_verification_email(email: str, token: str):
         f"Please click the following link to verify your email: {verification_link}"
     )
 
-    await aiosmtplib.send(
-        message,
-        hostname=EMAIL_HOST,
-        port=EMAIL_PORT,
-        username=EMAIL_USER,
-        password=EMAIL_PASSWORD,
-        use_tls=True,
-    )
+    context = ssl.create_default_context()
+
+    with smtplib.SMTP_SSL(EMAIL_HOST, EMAIL_PORT, context=context) as smtp:
+        smtp.login(EMAIL_USER, EMAIL_PASSWORD)
+        smtp.sendmail(EMAIL_USER, email, message.as_string())
