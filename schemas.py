@@ -27,6 +27,7 @@ class UserShow(UserBase):
     is_admin: bool
     is_hospital_admin: bool
     hospital_id: Optional[int] = None
+    is_verified: bool
 
     class Config:
         from_attributes = True
