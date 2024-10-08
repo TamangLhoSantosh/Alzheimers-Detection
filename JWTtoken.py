@@ -96,4 +96,4 @@ def verify_user_email(token: str, db: Session):
     except JWTError:
         raise credentials_exception
 
-    return
+    return "Your email is verified."

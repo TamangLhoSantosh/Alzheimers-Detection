@@ -14,14 +14,18 @@ EMAIL_PASSWORD = os.getenv("EMAIL_PASSWORD")
 
 
 async def send_verification_email(email: str, token: str):
+    verification_link = f"http://localhost:8000/verify-email?token={token}"
+    subject = "Email Verification"
+    body = f"""
+    <h1>Verify Your Email</h1>
+    <p>Please click <a href="{verification_link}">here</a> to verify your email.</p>
+"""
+
     message = EmailMessage()
     message["From"] = EMAIL_USER
     message["To"] = email
-    message["Subject"] = "Email Verification"
-    verification_link = f"http://localhost:8000/verify-email?token={token}"
-    message.set_content(
-        f"Please click the following link to verify your email: {verification_link}"
-    )
+    message["Subject"] = subject
+    message.set_content(body, subtype="html")
 
     context = ssl.create_default_context()
 
