@@ -1,9 +1,12 @@
+import datetime
 from fastapi import HTTPException, status
 from sqlalchemy.orm import Session
-import models, schemas, hashing
+import models, schemas, hashing, JWTtoken
+
+from emailutils import send_verification_email
 
 
-def create(request: schemas.UserCreate, db: Session):
+async def create(request: schemas.UserCreate, db: Session):
     if request.hospital_id is not None:
         hospital = (
             db.query(models.Hospital)
@@ -46,6 +49,16 @@ def create(request: schemas.UserCreate, db: Session):
     db.add(new_user)
     db.commit()
     db.refresh(new_user)
+
+    expires_delta = datetime.timedelta(hours=24)
+
+    # generate a JWT token and return
+    verification_token = JWTtoken.create_access_token(
+        data={"sub": new_user.email}, expires_delta=expires_delta
+    )
+
+    await send_verification_email(new_user.email, verification_token)
+
     return new_user
 
 

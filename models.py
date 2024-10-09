@@ -30,6 +30,7 @@ class User(Base):
     is_hospital_admin = Column(Boolean, default=False)
     created_at = Column(Date, nullable=False, default=text("now()"))
     hospital_id = Column(Integer, ForeignKey("hospitals.id"), nullable=True)
+    is_verified = Column(Boolean, default=False)
 
     hospital = relationship("Hospital", back_populates="users")
     patients = relationship("Patient", back_populates="user")

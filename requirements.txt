@@ -7,3 +7,4 @@ bcrypt
 cryptography
 python-jose
 python-multipart
+python-dotenv

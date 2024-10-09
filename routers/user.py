@@ -13,8 +13,8 @@ get_db = database.get_db
     status_code=status.HTTP_201_CREATED,
     response_model=schemas.UserCreate,
 )
-def create_user(request: schemas.UserCreate, db: Session = Depends(get_db)):
-    return user.create(request, db)
+async def create_user(request: schemas.UserCreate, db: Session = Depends(get_db)):
+    return await user.create(request, db)
 
 
 @router.get("/{id}", response_model=schemas.UserBase)
