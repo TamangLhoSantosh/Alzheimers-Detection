@@ -1,7 +1,14 @@
 from fastapi import FastAPI
 import models
 from database import engine
-from routers import user, authenticate, hospital, patient, test_image, result_image
+from routers import (
+    user,
+    authenticate,
+    hospital,
+    patient,
+    test_image,
+    result_image,
+)
 
 app = FastAPI()
 

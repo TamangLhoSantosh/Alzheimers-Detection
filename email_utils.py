@@ -13,14 +13,7 @@ EMAIL_USER = os.getenv("EMAIL_USER")
 EMAIL_PASSWORD = os.getenv("EMAIL_PASSWORD")
 
 
-async def send_verification_email(email: str, token: str):
-    verification_link = f"http://localhost:8000/verify-email?token={token}"
-    subject = "Email Verification"
-    body = f"""
-    <h1>Verify Your Email</h1>
-    <p>Please click <a href="{verification_link}">here</a> to verify your email.</p>
-"""
-
+async def send_email(email, subject, body):
     message = EmailMessage()
     message["From"] = EMAIL_USER
     message["To"] = email
@@ -32,6 +25,16 @@ async def send_verification_email(email: str, token: str):
     with smtplib.SMTP_SSL(EMAIL_HOST, EMAIL_PORT, context=context) as smtp:
         smtp.login(EMAIL_USER, EMAIL_PASSWORD)
         smtp.sendmail(EMAIL_USER, email, message.as_string())
+
+
+async def send_verification_email(email: str, token: str):
+    verification_link = f"http://localhost:8000/verify-email?token={token}"
+    subject = "Email Verification"
+    body = f"""
+    <h1>Verify Your Email</h1>
+    <p>Please click <a href="{verification_link}">here</a> to verify your email.</p>
+"""
+    await send_email(email, subject, body)
 
 
 async def send_reset_email(email: str, token: str):
@@ -41,15 +44,4 @@ async def send_reset_email(email: str, token: str):
     <h1>Reset Your Password</h1>
     <p>Please click <a href="{reset_link}">here</a> to reset password.</p>
 """
-
-    message = EmailMessage()
-    message["From"] = EMAIL_USER
-    message["To"] = email
-    message["Subject"] = subject
-    message.set_content(body, subtype="html")
-
-    context = ssl.create_default_context()
-
-    with smtplib.SMTP_SSL(EMAIL_HOST, EMAIL_PORT, context=context) as smtp:
-        smtp.login(EMAIL_USER, EMAIL_PASSWORD)
-        smtp.sendmail(EMAIL_USER, email, message.as_string())
+    await send_email(email, subject, body)
