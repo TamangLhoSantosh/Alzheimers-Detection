@@ -32,3 +32,24 @@ async def send_verification_email(email: str, token: str):
     with smtplib.SMTP_SSL(EMAIL_HOST, EMAIL_PORT, context=context) as smtp:
         smtp.login(EMAIL_USER, EMAIL_PASSWORD)
         smtp.sendmail(EMAIL_USER, email, message.as_string())
+
+
+async def send_reset_email(email: str, token: str):
+    reset_link = f"http://localhost:8000/password-reset?token={token}"
+    subject = "Email Verification"
+    body = f"""
+    <h1>Reset Your Password</h1>
+    <p>Please click <a href="{reset_link}">here</a> to reset password.</p>
+"""
+
+    message = EmailMessage()
+    message["From"] = EMAIL_USER
+    message["To"] = email
+    message["Subject"] = subject
+    message.set_content(body, subtype="html")
+
+    context = ssl.create_default_context()
+
+    with smtplib.SMTP_SSL(EMAIL_HOST, EMAIL_PORT, context=context) as smtp:
+        smtp.login(EMAIL_USER, EMAIL_PASSWORD)
+        smtp.sendmail(EMAIL_USER, email, message.as_string())
