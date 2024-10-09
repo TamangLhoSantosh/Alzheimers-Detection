@@ -8,6 +8,7 @@ from routers import (
     patient,
     test_image,
     result_image,
+    password_reset,
 )
 
 app = FastAPI()
@@ -25,3 +26,5 @@ app.include_router(patient.router)
 app.include_router(test_image.router)
 
 app.include_router(result_image.router)
+
+app.include_router(password_reset.router)
