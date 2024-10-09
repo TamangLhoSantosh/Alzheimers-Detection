@@ -39,7 +39,6 @@ def create_access_token(data: dict, expires_delta: Optional[timedelta] = None):
 
 def verify_token(
     token: str,
-    credentials_exception: HTTPException,
     db: Session = Depends(database.get_db),
 ):
     try:

@@ -119,3 +119,11 @@ class ResultImage(ResultImageBase):
 
     class Config:
         from_attributes = True
+
+
+class PasswordReset(BaseModel):
+    email: str
+
+
+class PasswordResetRequest(PasswordReset):
+    pass
