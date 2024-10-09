@@ -3,7 +3,7 @@ from fastapi import HTTPException, status
 from sqlalchemy.orm import Session
 import models, schemas, hashing, JWTtoken
 
-from emailutils import send_verification_email
+from email_utils import send_verification_email
 
 
 async def create(request: schemas.UserCreate, db: Session):

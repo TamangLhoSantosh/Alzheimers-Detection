@@ -2,7 +2,7 @@ from datetime import timedelta
 
 from fastapi import HTTPException, status
 from sqlalchemy.orm import Session
-import models, JWTtoken, emailutils
+import models, JWTtoken, email_utils
 
 
 async def password_reset_request(email: str, db: Session):
@@ -26,6 +26,6 @@ async def password_reset_request(email: str, db: Session):
         data={"sub": email}, expires_delta=expires_delta
     )
 
-    await emailutils.send_reset_email(email, reset_token)
+    await email_utils.send_reset_email(email, reset_token)
 
     return {"message": "Please check your email"}
