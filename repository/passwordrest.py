@@ -2,7 +2,7 @@ from datetime import timedelta
 
 from fastapi import HTTPException, status
 from sqlalchemy.orm import Session
-import models, JWTtoken, email_utils
+import models, JWTtoken, email_utils, schemas, hashing
 
 
 async def password_reset_request(email: str, db: Session):
@@ -29,3 +29,25 @@ async def password_reset_request(email: str, db: Session):
     await email_utils.send_reset_email(email, reset_token)
 
     return {"message": "Please check your email"}
+
+
+async def password_reset_confirm(
+    token: str, passwords: schemas.PasswordResetConfirm, db: Session
+):
+    user = JWTtoken.verify_token(token, db)
+
+    if user is None:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND, detail="User not found."
+        )
+
+    if passwords.new_password != passwords.confirm_new_password:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST, detail="Passwords do not match."
+        )
+
+    user.password = hashing.Hash.bcrypt(passwords.new_password)
+    db.commit()
+    db.refresh(user)
+
+    return {"message": "Password reset successful."}
