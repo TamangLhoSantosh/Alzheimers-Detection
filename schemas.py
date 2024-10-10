@@ -127,3 +127,8 @@ class PasswordReset(BaseModel):
 
 class PasswordResetRequest(PasswordReset):
     pass
+
+
+class PasswordResetConfirm(BaseModel):
+    new_password: str
+    confirm_new_password: str
