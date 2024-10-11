@@ -1,11 +1,11 @@
 from datetime import timedelta
 
-from fastapi import HTTPException, status
+from fastapi import HTTPException, status, BackgroundTasks
 from sqlalchemy.orm import Session
 import models, JWTtoken, email_utils, schemas, hashing
 
 
-async def password_reset_request(email: str, db: Session):
+async def password_reset_request(email: str, bg_task: BackgroundTasks, db: Session):
     user = db.query(models.User).filter(models.User.email == email).first()
 
     if user is None:
@@ -26,7 +26,7 @@ async def password_reset_request(email: str, db: Session):
         data={"sub": email}, expires_delta=expires_delta
     )
 
-    await email_utils.send_reset_email(email, reset_token)
+    bg_task.add_task(email_utils.send_reset_email, email, reset_token)
 
     return {"message": "Please check your email"}
 

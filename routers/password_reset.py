@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Depends, Query
+from fastapi import APIRouter, Depends, Query, BackgroundTasks
 from sqlalchemy.orm import Session
 from repository import passwordrest
 import database, schemas
@@ -8,8 +8,10 @@ get_db = database.get_db
 
 
 @router.post("/request")
-async def password_reset_request(email: str, db: Session = Depends(get_db)):
-    return await passwordrest.password_reset_request(email, db)
+async def password_reset_request(
+    email: str, bg_task: BackgroundTasks, db: Session = Depends(get_db)
+):
+    return await passwordrest.password_reset_request(email, bg_task, db)
 
 
 @router.post("/confirm")
