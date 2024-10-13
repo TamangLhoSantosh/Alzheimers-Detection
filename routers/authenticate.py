@@ -51,3 +51,8 @@ def verify_user_account(
     db: Session = Depends(database.get_db),
 ):
     return JWTtoken.verify_user_email(token, db)
+
+
+@router.post("/token/refresh")
+def refresh_token(refresh_token: str, db: Session = Depends(database.get_db)):
+    return JWTtoken.refresh_token(refresh_token, db)
