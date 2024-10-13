@@ -28,7 +28,7 @@ def create_access_token(
     data: dict, expires_delta: timedelta = None, refresh: bool = False
 ):
     payload = {}
-    payload["user"] = data
+    payload["sub"] = data.get("sub")
     payload["exp"] = datetime.now(timezone.utc) + (
         expires_delta
         if expires_delta is not None
@@ -69,9 +69,7 @@ def verify_token(
 def verify_user_email(token: str, db: Session):
     try:
         payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
-        print(payload)
         email: str = payload.get("sub")
-        print(email)
 
         if email is None:
             raise credentials_exception
@@ -100,3 +98,31 @@ def verify_user_email(token: str, db: Session):
         raise credentials_exception
 
     return "Your email is verified."
+
+
+def refresh_token(refresh_token: str, db: Session = Depends(database.get_db)):
+    try:
+        payload = jwt.decode(refresh_token, SECRET_KEY, algorithms=[ALGORITHM])
+        if not payload.get("refresh"):
+            raise HTTPException(
+                status_code=status.HTTP_401_UNAUTHORIZED, detail="Invalid refresh token"
+            )
+
+        email: str = payload.get("sub")
+        if email is None:
+            raise credentials_exception
+
+        user = db.query(models.User).filter(models.User.email == email).first()
+        if user is None:
+            raise HTTPException(
+                status_code=status.HTTP_401_UNAUTHORIZED, detail="User not found"
+            )
+
+        # Create a new access token
+        new_access_token = create_access_token(data={"sub": user.email})
+        return {"access_token": new_access_token, "token_type": "bearer"}
+
+    except JWTError:
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED, detail="Invalid token"
+        )
