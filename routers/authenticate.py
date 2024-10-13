@@ -3,9 +3,10 @@ from datetime import timedelta
 from fastapi import APIRouter, Depends, status, HTTPException, Query
 from fastapi.responses import JSONResponse
 from fastapi.security import OAuth2PasswordRequestForm
-import JWTtoken, database, models
 from sqlalchemy.orm import Session
+
 from hashing import Hash
+import JWTtoken, database, models, schemas
 
 router = APIRouter(tags=["Authentication"])
 
@@ -53,6 +54,8 @@ def verify_user_account(
     return JWTtoken.verify_user_email(token, db)
 
 
-@router.post("/token/refresh")
-def refresh_token(refresh_token: str, db: Session = Depends(database.get_db)):
+@router.post("/refresh-token")
+def refresh_token(
+    refresh_token: schemas.TokenRefreshRequest, db: Session = Depends(database.get_db)
+):
     return JWTtoken.refresh_token(refresh_token, db)

@@ -132,3 +132,8 @@ class PasswordResetRequest(PasswordReset):
 class PasswordResetConfirm(BaseModel):
     new_password: str
     confirm_new_password: str
+
+
+class TokenRefreshRequest(BaseModel):
+    access_token: str
+    refresh_token: str
