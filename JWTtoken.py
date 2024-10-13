@@ -35,6 +35,7 @@ def create_access_token(
         else timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)
     )
     payload["jti"] = str(uuid.uuid4())
+    payload["iat"] = datetime.now(timezone.utc)
     payload["refresh"] = refresh
 
     token = jwt.encode(payload, SECRET_KEY, algorithm=ALGORITHM)
