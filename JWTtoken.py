@@ -48,6 +48,11 @@ def verify_token(
 ):
     try:
         payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
+        if payload.get("refresh"):
+            raise HTTPException(
+                status_code=status.HTTP_401_UNAUTHORIZED, detail="Invalid access token"
+            )
+
         email: str = payload.get("sub")
         if email is None:
             raise credentials_exception
@@ -70,8 +75,8 @@ def verify_token(
 def verify_user_email(token: str, db: Session):
     try:
         payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
-        email: str = payload.get("sub")
 
+        email: str = payload.get("sub")
         if email is None:
             raise credentials_exception
 
@@ -80,7 +85,6 @@ def verify_user_email(token: str, db: Session):
         user = (
             db.query(models.User).filter(models.User.email == token_data.email).first()
         )
-        print(user)
         if user is None:
             raise credentials_exception
 
