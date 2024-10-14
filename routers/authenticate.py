@@ -58,4 +58,4 @@ def verify_user_account(
 def refresh_token(
     refresh_token: schemas.TokenRefreshRequest, db: Session = Depends(database.get_db)
 ):
-    return JWTtoken.refresh_token(refresh_token, db)
+    return JWTtoken.verify_refresh_token(refresh_token, db)

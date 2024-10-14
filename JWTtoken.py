@@ -90,9 +90,8 @@ def verify_access_token(
 ) -> models.User:
     payload = decode_token(token)
     if payload.get("refresh"):
-        raise HTTPException(
-            status_code=status.HTTP_401_UNAUTHORIZED, detail="Invalid access token"
-        )
+        raise_credentials_exception(detail="Invalid access token")
+
     email: str = payload.get("sub")
     if email is None:
         raise_credentials_exception()
@@ -107,9 +106,7 @@ def verify_refresh_token(
 ) -> dict:
     payload = decode_token(refresh_token)
     if not payload.get("refresh"):
-        raise HTTPException(
-            status_code=status.HTTP_401_UNAUTHORIZED, detail="Invalid refresh token"
-        )
+        raise_credentials_exception(detail="Invalid refresh token")
 
     email: str = payload.get("sub")
     if email is None:
