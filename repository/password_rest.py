@@ -34,7 +34,7 @@ async def password_reset_request(email: str, bg_task: BackgroundTasks, db: Sessi
 async def password_reset_confirm(
     token: str, passwords: schemas.PasswordResetConfirm, db: Session
 ):
-    user = JWTtoken.verify_token(token, db)
+    user = JWTtoken.verify_access_token(token, db)
 
     if user is None:
         raise HTTPException(

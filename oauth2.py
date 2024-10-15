@@ -11,7 +11,7 @@ def get_current_user(
     db: Session = Depends(database.get_db),
 ):
 
-    return JWTtoken.verify_token(data, db)
+    return JWTtoken.verify_access_token(data, db)
 
 
 def get_admin_user(
