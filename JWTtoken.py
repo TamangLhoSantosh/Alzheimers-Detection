@@ -55,7 +55,7 @@ def create_access_token(
 
     payload = {
         "sub": data.get("sub"),
-        "exp": datetime.now(timezone.utc) + expires_delta,
+        "exp": datetime.now(timezone.utc) + expire,
         "jti": str(uuid.uuid4()),
         "iat": datetime.now(timezone.utc),
         "refresh": refresh,

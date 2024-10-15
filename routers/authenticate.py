@@ -23,6 +23,7 @@ def login(
     request: OAuth2PasswordRequestForm = Depends(),
     db: Session = Depends(database.get_db),
 ):
+    print(request)
     user = db.query(models.User).filter(models.User.email == request.username).first()
     if not user:
         raise credentials_exception

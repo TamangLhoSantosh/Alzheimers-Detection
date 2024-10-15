@@ -135,5 +135,4 @@ class PasswordResetConfirm(BaseModel):
 
 
 class TokenRefreshRequest(BaseModel):
-    access_token: str
     refresh_token: str
