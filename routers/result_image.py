@@ -6,7 +6,7 @@ import schemas, database, oauth2
 
 router = APIRouter(
     prefix="/hospital/{hospital_id}/patient/{patient_id}/test/{test_image_id}/result_image",
-    tags=["result Images"],
+    tags=["Result Images"],
 )
 get_db = database.get_db
 

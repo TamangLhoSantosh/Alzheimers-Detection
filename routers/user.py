@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Depends, status
+from fastapi import APIRouter, Depends, status, BackgroundTasks
 from sqlalchemy.orm import Session
 from repository import user
 import schemas, database, oauth2
@@ -13,8 +13,10 @@ get_db = database.get_db
     status_code=status.HTTP_201_CREATED,
     response_model=schemas.UserCreate,
 )
-async def create_user(request: schemas.UserCreate, db: Session = Depends(get_db)):
-    return await user.create(request, db)
+async def create_user(
+    request: schemas.UserCreate, bg_task: BackgroundTasks, db: Session = Depends(get_db)
+):
+    return await user.create(request, bg_task, db)
 
 
 @router.get("/{id}", response_model=schemas.UserBase)

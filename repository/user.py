@@ -1,12 +1,12 @@
 import datetime
-from fastapi import HTTPException, status
+from fastapi import HTTPException, status, BackgroundTasks
 from sqlalchemy.orm import Session
 import models, schemas, hashing, JWTtoken
 
-from emailutils import send_verification_email
+from email_utils import send_verification_email
 
 
-async def create(request: schemas.UserCreate, db: Session):
+async def create(request: schemas.UserCreate, bg_task: BackgroundTasks, db: Session):
     if request.hospital_id is not None:
         hospital = (
             db.query(models.Hospital)
@@ -57,7 +57,7 @@ async def create(request: schemas.UserCreate, db: Session):
         data={"sub": new_user.email}, expires_delta=expires_delta
     )
 
-    await send_verification_email(new_user.email, verification_token)
+    bg_task.add_task(send_verification_email, new_user.email, verification_token)
 
     return new_user
 
