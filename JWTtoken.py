@@ -55,7 +55,10 @@ def create_access_token(
 
     payload = {
         "sub": data.get("sub"),
-        "exp": datetime.now(timezone.utc) + expires_delta,
+        "is_admin": data.get("is_admin"),
+        "is_hospital_admin": data.get("is_hospital_admin"),
+        "hospital_id": data.get("hospital_id"),
+        "exp": datetime.now(timezone.utc) + expire,
         "jti": str(uuid.uuid4()),
         "iat": datetime.now(timezone.utc),
         "refresh": refresh,
@@ -115,5 +118,12 @@ def verify_refresh_token(
     user = get_user_from_email(email, db)
 
     # Create a new access token
-    new_access_token = create_access_token(data={"sub": user.email})
+    new_access_token = create_access_token(
+        data={
+            "sub": user.email,
+            "is_admin": user.is_admin,
+            "is_hospital_admin": user.is_hospital_admin,
+            "hospital_id": user.hospital_id,
+        }
+    )
     return {"access_token": new_access_token, "token_type": "bearer"}
