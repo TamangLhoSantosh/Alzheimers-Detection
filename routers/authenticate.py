@@ -51,6 +51,7 @@ def login(
             "access_token": access_token,
             "refresh_token": refresh_token,
             "user": user.email,
+            "token_type": "bearer",
         },
         status_code=status.HTTP_200_OK,
     )

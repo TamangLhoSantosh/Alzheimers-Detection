@@ -10,10 +10,13 @@ from routers import (
     result_image,
     password_reset,
 )
+from middleware.hospital_access import HospitalAccessMiddleware
 
 app = FastAPI()
 
 models.Base.metadata.create_all(engine)
+
+app.add_middleware(HospitalAccessMiddleware)
 
 app.include_router(user.router)
 
