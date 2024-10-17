@@ -32,9 +32,18 @@ def login(
         raise credentials_exception
 
     # generate a JWT token and return
-    access_token = JWTtoken.create_access_token(data={"sub": user.email})
+    access_token = JWTtoken.create_access_token(
+        data={
+            "sub": user.email,
+            "is_admin": user.is_admin,
+            "is_hospital_admin": user.is_hospital_admin,
+            "hospital_id": user.hospital_id,
+        }
+    )
     refresh_token = JWTtoken.create_access_token(
-        data={"sub": user.email}, expires_delta=timedelta(days=2), refresh=True
+        data={"sub": user.email},
+        expires_delta=timedelta(days=7),
+        refresh=True,
     )
     return JSONResponse(
         content={
