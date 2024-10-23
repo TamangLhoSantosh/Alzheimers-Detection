@@ -12,6 +12,9 @@ from sqlalchemy.orm import relationship
 from database import Base
 
 
+# User model representing users of the system.
+# It contains basic user information and role identifiers (admin, hospital admin).
+# Users can belong to hospitals and are linked to multiple patients.
 class User(Base):
     __tablename__ = "users"
 
@@ -36,6 +39,8 @@ class User(Base):
     patients = relationship("Patient", back_populates="user")
 
 
+# Hospital model representing hospitals in the system.
+# Hospitals can have multiple users and multiple patients.
 class Hospital(Base):
     __tablename__ = "hospitals"
 
@@ -50,6 +55,8 @@ class Hospital(Base):
     patients = relationship("Patient", back_populates="hospital")
 
 
+# Patient model representing patients linked to a hospital and user.
+# Patients can have test images uploaded for analysis.
 class Patient(Base):
     __tablename__ = "patients"
 
@@ -70,6 +77,8 @@ class Patient(Base):
     test_images = relationship("TestImage", back_populates="patient")
 
 
+# TestImage model representing medical images uploaded for a patient.
+# These images are used for testing and analysis.
 class TestImage(Base):
     __tablename__ = "test_images"
 
@@ -81,6 +90,8 @@ class TestImage(Base):
     result_images = relationship("ResultImage", back_populates="test_image")
 
 
+# ResultImage model representing the analysis or result images generated from a test image.
+# These are the output images after analysis.
 class ResultImage(Base):
     __tablename__ = "result_images"
 

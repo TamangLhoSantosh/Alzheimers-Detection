@@ -3,12 +3,15 @@ from sqlalchemy.orm import Session
 import schemas, models
 
 
+# Retrieve all hospitals from the database
 def get_all(db: Session):
     hospitals = db.query(models.Hospital).all()
     return hospitals
 
 
+# Add hospital to the database
 def create(request: schemas.HospitalCreate, db: Session):
+    # Check if a hospital with the same name already exists
     hospital = (
         db.query(models.Hospital).filter(models.Hospital.name == request.name).first()
     )
@@ -18,6 +21,7 @@ def create(request: schemas.HospitalCreate, db: Session):
             status_code=status.HTTP_400_BAD_REQUEST, detail="Hospital already exists"
         )
 
+    # Create a new hospital record
     new_hospital = models.Hospital(
         name=request.name,
         address=request.address,
@@ -30,7 +34,9 @@ def create(request: schemas.HospitalCreate, db: Session):
     return new_hospital
 
 
+# To update existing hospital
 def update(request: schemas.Hospital, db: Session):
+    # Retrieve the existing hospital record
     hospital = (
         db.query(models.Hospital).filter(models.Hospital.id == request.id).first()
     )
@@ -38,6 +44,7 @@ def update(request: schemas.Hospital, db: Session):
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND, detail="Hospital not found"
         )
+    # Update hospital details
     hospital.name = request.name
     hospital.address = request.address
     hospital.contact = request.contact
@@ -47,6 +54,7 @@ def update(request: schemas.Hospital, db: Session):
     return hospital
 
 
+# Retrieve a specific hospital by ID
 def show(id: int, db: Session):
     hospital = db.query(models.Hospital).filter(models.Hospital.id == id).first()
     if not hospital:
@@ -56,7 +64,9 @@ def show(id: int, db: Session):
     return hospital
 
 
+# To delete specific hospital
 def delete(id: int, db: Session):
+    # Retrieve the hospital record to be deleted
     hospital = db.query(models.Hospital).filter(models.Hospital.id == id).first()
     if not hospital:
         raise HTTPException(
