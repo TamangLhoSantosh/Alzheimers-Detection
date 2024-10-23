@@ -2,11 +2,12 @@ import datetime
 from fastapi import HTTPException, status, BackgroundTasks
 from sqlalchemy.orm import Session
 import models, schemas, hashing, JWTtoken
-
 from email_utils import send_verification_email
 
 
+# Add user to the database
 async def create(request: schemas.UserCreate, bg_task: BackgroundTasks, db: Session):
+    # Check if the hospital exists if hospital_id is provided
     if request.hospital_id is not None:
         hospital = (
             db.query(models.Hospital)
@@ -15,6 +16,8 @@ async def create(request: schemas.UserCreate, bg_task: BackgroundTasks, db: Sess
         )
         if not hospital:
             raise HTTPException(status_code=400, detail="Hospital not found")
+
+    # Check if a user with the given email already exists
     user = db.query(models.User).filter(models.User.email == request.email).first()
     if user:
         raise HTTPException(
@@ -22,6 +25,7 @@ async def create(request: schemas.UserCreate, bg_task: BackgroundTasks, db: Sess
             detail=f"User with email {request.email} already exists",
         )
 
+    # Check if a user with the given username already exists
     user = (
         db.query(models.User).filter(models.User.username == request.username).first()
     )
@@ -31,6 +35,7 @@ async def create(request: schemas.UserCreate, bg_task: BackgroundTasks, db: Sess
             detail=f"User with username {request.username} already exists",
         )
 
+    # Create new user instance
     new_user = models.User(
         username=request.username,
         first_name=request.first_name,
@@ -41,27 +46,29 @@ async def create(request: schemas.UserCreate, bg_task: BackgroundTasks, db: Sess
         contact=request.contact,
         address=request.address,
         email=request.email,
-        password=hashing.Hash.bcrypt(request.password),
+        password=hashing.Hash.bcrypt(request.password),  # Hash the password
         is_admin=request.is_admin,
         is_hospital_admin=request.is_hospital_admin,
         hospital_id=request.hospital_id,
     )
+    # Add the new user to the database
     db.add(new_user)
     db.commit()
     db.refresh(new_user)
 
+    # Create a JWT token for email verification
     expires_delta = datetime.timedelta(hours=24)
-
-    # generate a JWT token and return
     verification_token = JWTtoken.create_access_token(
         data={"sub": new_user.email}, expires_delta=expires_delta
     )
 
+    # Send verification email in the background
     bg_task.add_task(send_verification_email, new_user.email, verification_token)
 
     return new_user
 
 
+# Retrieve a user by ID
 def show(db: Session, id: int):
     user = db.query(models.User).filter(models.User.id == id).first()
     if not user:

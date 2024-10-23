@@ -14,8 +14,10 @@ from middleware.hospital_access import HospitalAccessMiddleware
 
 app = FastAPI()
 
+# Create all database tables (if not already created) using SQLAlchemy models
 models.Base.metadata.create_all(engine)
 
+# Add middleware to the app. The HospitalAccessMiddleware restricts access based on the user
 app.add_middleware(HospitalAccessMiddleware)
 
 app.include_router(user.router)
