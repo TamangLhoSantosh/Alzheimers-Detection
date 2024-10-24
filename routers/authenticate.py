@@ -18,7 +18,7 @@ import JWTtoken, database, models, schemas
 
 # Initialize the APIRouter for authentication-related endpoints
 # Set the tags for the router
-router = APIRouter(tags=["Authentication"])
+router = APIRouter(prefix="/auth", tags=["Authentication"])
 
 # Define an HTTP exception for unauthorized access due to invalid credentials
 credentials_exception = HTTPException(
