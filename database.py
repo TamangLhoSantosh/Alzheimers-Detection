@@ -1,4 +1,4 @@
-import os  # To interact with the operating system
+import os
 
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker

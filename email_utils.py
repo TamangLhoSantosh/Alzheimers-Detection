@@ -1,4 +1,4 @@
-import os  # To interact with the operating system
+import os
 
 import smtplib  # For sending emails
 from email.message import (
