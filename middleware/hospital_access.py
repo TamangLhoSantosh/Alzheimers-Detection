@@ -1,7 +1,9 @@
+import os
+
 from starlette.middleware.base import BaseHTTPMiddleware
 from starlette.requests import Request
 from starlette.responses import Response
-import os
+
 import jwt
 from jwt.exceptions import InvalidTokenError
 import dotenv
