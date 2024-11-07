@@ -1,4 +1,5 @@
 from fastapi import HTTPException, status
+from sqlalchemy import or_
 from sqlalchemy.orm import Session
 import schemas, models
 
@@ -11,9 +12,16 @@ def get_all(db: Session):
 
 # Add hospital to the database
 def create(request: schemas.HospitalCreate, db: Session):
-    # Check if a hospital with the same name already exists
+    # Check if a hospital with the same name or email already exists
     hospital = (
-        db.query(models.Hospital).filter(models.Hospital.name == request.name).first()
+        db.query(models.Hospital)
+        .filter(
+            or_(
+                models.Hospital.name == request.name,
+                models.Hospital.email == request.email,
+            )
+        )
+        .first()
     )
 
     if hospital:
