@@ -39,3 +39,15 @@ def show_user(
     ),  # OAuth2 dependency to verify the current user
 ):
     return user.show(db, id)
+
+
+# Endpoint to fetch all users
+# - Uses GET method and returns a list of users based on the `UserShow` schema
+@router.get("/", response_model=list[schemas.UserShow])
+def list_users(
+    db: Session = Depends(get_db),  # Database session dependency
+    current_user: schemas.UserBase = Depends(
+        oauth2.get_current_user
+    ),  # OAuth2 dependency to verify the current user
+):
+    return user.get_all(db)
