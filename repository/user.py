@@ -5,6 +5,12 @@ import models, schemas, hashing, JWTtoken
 from email_utils import send_verification_email
 
 
+# Retrieve all users from the database
+def get_all(db: Session):
+    users = db.query(models.User).all()
+    return users
+
+
 # Add user to the database
 async def create(request: schemas.UserCreate, bg_task: BackgroundTasks, db: Session):
     # Check if the hospital exists if hospital_id is provided

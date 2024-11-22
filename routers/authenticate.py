@@ -8,9 +8,7 @@ from fastapi import (
     Query,
 )
 from fastapi.responses import JSONResponse
-from fastapi.security import (
-    OAuth2PasswordRequestForm,
-)
+from fastapi.security import OAuth2PasswordRequestForm
 from sqlalchemy.orm import Session
 
 from hashing import Hash
@@ -60,10 +58,13 @@ def login(
 
     # Generate a refresh token with an expiration time of 7 days
     refresh_token = JWTtoken.create_access_token(
-        data={"sub": user.email},  #
+        data={"sub": user.email},
         expires_delta=timedelta(days=7),
         refresh=True,
     )
+
+    # User's full name to send
+    userName = user.first_name + user.middle_name + user.last_name
 
     # Return a JSON response with the tokens and user information
     return JSONResponse(
@@ -71,7 +72,9 @@ def login(
             "message": "Login Successful",
             "access_token": access_token,
             "refresh_token": refresh_token,
-            "user": user.email,
+            "is_admin": user.is_admin,
+            "is_hospital_admin": user.is_hospital_admin,
+            "user": userName,
             "token_type": "bearer",
         },
         status_code=status.HTTP_200_OK,
