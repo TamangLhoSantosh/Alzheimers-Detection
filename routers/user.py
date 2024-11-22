@@ -51,3 +51,33 @@ def list_users(
     ),  # OAuth2 dependency to verify the current user
 ):
     return user.get_all(db)
+
+
+# Endpoint to update user by ID
+# - Uses PUT method and returns HTTP 202 (accepted) status code upon success
+# - Request model: `schemas.UserShow` - to ensure the request body structure
+@router.put(
+    "/{id}", status_code=status.HTTP_202_ACCEPTED, response_model=schemas.UserShow
+)
+def update_user(
+    id: int,  # The user ID passed in the URL path
+    request: schemas.UserShow,  # Request body that must match the `UserShow` schema
+    db: Session = Depends(get_db),  # Database session dependency
+    current_user: schemas.UserBase = Depends(
+        oauth2.get_current_user
+    ),  # OAuth2 dependency to verify the current user
+):
+    return user.update(db, id, request)
+
+
+# Endpoint to delete user by ID
+# - Uses DELETE method and returns HTTP 204 (no content) status code upon success
+@router.delete("/{id}", status_code=status.HTTP_204_NO_CONTENT)
+def delete_user(
+    id: int,  # The user ID passed in the URL path
+    db: Session = Depends(get_db),  # Database session dependency
+    current_user: schemas.UserBase = Depends(
+        oauth2.get_current_user
+    ),  # OAuth2 dependency to verify the current user
+):
+    return user.delete(db, id)

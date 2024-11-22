@@ -83,3 +83,37 @@ def show(db: Session, id: int):
             detail=f"User with id {id} is not available",
         )
     return user
+
+
+# Update a user by ID
+def update(db: Session, id: int, request: schemas.UserShow):
+    user = db.query(models.User).filter(models.User.id == id)
+    if not user.first():
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail=f"User with id {id} is not available",
+        )
+    user.update(
+        {
+            "username": request.username,
+            "first_name": request.first_name,
+            "middle_name": request.middle_name,
+            "last_name": request.last_name,
+            "dob": request.dob,
+        }
+    )
+    db.commit()
+    return request
+
+
+# Delete a user by ID
+def delete(id: int, db: Session):
+    user = db.query(models.User).filter(models.User.id == id).first()
+    if not user:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail=f"User with id {id} is not available",
+        )
+    db.delete(user)
+    db.commit()
+    return {"message": "User deleted successfully"}
