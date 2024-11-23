@@ -69,7 +69,7 @@ async def create(request: schemas.UserCreate, bg_task: BackgroundTasks, db: Sess
     )
 
     # Send verification email in the background
-    bg_task.add_task(send_verification_email, new_user.email, verification_token)
+    # bg_task.add_task(send_verification_email, new_user.email, verification_token)
 
     return new_user
 
@@ -100,6 +100,12 @@ def update(db: Session, id: int, request: schemas.UserShow):
             "middle_name": request.middle_name,
             "last_name": request.last_name,
             "dob": request.dob,
+            "address": request.address,
+            "contact": request.contact,
+            "email": request.email,
+            "is_admin": request.is_admin,
+            "is_hospital_admin": request.is_hospital_admin,
+            "updated_at": datetime.datetime.now(),
         }
     )
     db.commit()

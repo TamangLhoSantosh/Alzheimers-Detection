@@ -15,24 +15,22 @@ class UserBase(BaseModel):
     contact: str
     address: str
     email: str
+    hospital_id: Optional[int] = None
+    updated_at: Optional[datetime] = None
+    is_admin: bool  # Indicates if the user is an admin
+    is_hospital_admin: bool  # Indicates if the user is a hospital admin
 
 
 class UserCreate(UserBase):
     """Model for creating a new user, extending UserBase with additional fields."""
 
-    is_admin: bool  # Indicates if the user is an admin
-    is_hospital_admin: bool  # Indicates if the user is a hospital admin
     password: str
-    hospital_id: Optional[int] = None  # Optional hospital ID for association
 
 
 class UserShow(UserBase):
     """Model for displaying user information, including an ID and verification status."""
 
     id: int
-    is_admin: bool  # Indicates if the user is an admin
-    is_hospital_admin: bool  # Indicates if the user is a hospital admin
-    hospital_id: Optional[int] = None
     is_verified: bool
 
     class Config:
@@ -78,7 +76,7 @@ class Hospital(HospitalBase):
     """Model for displaying hospital information, including an ID and associated users."""
 
     id: int
-    created_at: datetime
+    updated_at: Optional[datetime] = None
     users: Optional[List[UserShow]] = []
 
     class Config:
@@ -107,7 +105,6 @@ class Patient(PatientBase):
     """Model for displaying patient information, including an ID and creation timestamp."""
 
     id: int
-    created_at: datetime
 
     class Config:
         from_attributes = True  # Allows the use of attributes from the database
