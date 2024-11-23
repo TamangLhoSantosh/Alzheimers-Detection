@@ -45,12 +45,13 @@ def show_user(
 # - Uses GET method and returns a list of users based on the `UserShow` schema
 @router.get("/", response_model=list[schemas.UserShow])
 def list_users(
+    hospital_id: int,  # Optional query parameter to filter users by hospital ID
     db: Session = Depends(get_db),  # Database session dependency
     current_user: schemas.UserBase = Depends(
         oauth2.get_current_user
     ),  # OAuth2 dependency to verify the current user
 ):
-    return user.get_all(db)
+    return user.get_all(hospital_id, db)
 
 
 # Endpoint to update user by ID

@@ -6,7 +6,12 @@ from email_utils import send_verification_email
 
 
 # Retrieve all users from the database
-def get_all(db: Session):
+def get_all(hospital_id: int, db: Session):
+    if hospital_id:
+        users = (
+            db.query(models.User).filter(models.User.hospital_id == hospital_id).all()
+        )
+        return users
     users = db.query(models.User).all()
     return users
 
