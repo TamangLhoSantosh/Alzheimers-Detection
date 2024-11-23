@@ -40,11 +40,21 @@ def login(
 
     # Check if the user exists
     if not user:
-        raise credentials_exception  # Raise an exception if user not found
+        raise HTTPException(
+            # Set the status code to 400 Unauthorized
+            status_code=status.HTTP_400_BAD_REQUEST,
+            # Detail message for the exception
+            detail="Invalid Credentials",
+        )  # Raise an exception if user not found
 
     # Verify the provided password against the hashed password in the database
     if not Hash.verify(user.password, request.password):
-        raise credentials_exception  # Raise an exception if password verification fails
+        raise HTTPException(
+            # Set the status code to 400 Unauthorized
+            status_code=status.HTTP_400_BAD_REQUEST,
+            # Detail message for the exception
+            detail="Invalid Credentials",
+        )  # Raise an exception if password verification fails
 
     # Generate an access token with user details
     access_token = JWTtoken.create_access_token(
