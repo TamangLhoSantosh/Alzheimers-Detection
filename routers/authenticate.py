@@ -85,6 +85,7 @@ def login(
             "is_admin": user.is_admin,
             "is_hospital_admin": user.is_hospital_admin,
             "user": userName,
+            "hospital_id": user.hospital_id,
             "token_type": "bearer",
         },
         status_code=status.HTTP_200_OK,
