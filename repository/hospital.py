@@ -57,6 +57,7 @@ def update(request: schemas.Hospital, db: Session):
     hospital.address = request.address
     hospital.contact = request.contact
     hospital.email = request.email
+    hospital.updated_at = request.updated_at
     db.commit()
     db.refresh(hospital)
     return hospital

@@ -32,6 +32,7 @@ class User(Base):
     is_admin = Column(Boolean, default=False)
     is_hospital_admin = Column(Boolean, default=False)
     created_at = Column(Date, nullable=False, default=text("now()"))
+    updated_at = Column(Date, nullable=False, default=text("now()"))
     hospital_id = Column(Integer, ForeignKey("hospitals.id"), nullable=True)
     is_verified = Column(Boolean, default=False)
 
@@ -50,6 +51,7 @@ class Hospital(Base):
     contact = Column(String(100), nullable=False)
     email = Column(String(100), unique=True, index=True, nullable=True)
     created_at = Column(TIMESTAMP(timezone=True), nullable=False, default=text("now()"))
+    updated_at = Column(Date, nullable=False, default=text("now()"))
 
     users = relationship("User", back_populates="hospital")
     patients = relationship("Patient", back_populates="hospital")
@@ -69,6 +71,7 @@ class Patient(Base):
     contact = Column(String(100), nullable=False)
     address = Column(String(100), nullable=False)
     created_at = Column(Date, nullable=False, default=text("now()"))
+    update_at = Column(Date, nullable=False, default=text("now()"))
     hospital_id = Column(Integer, ForeignKey("hospitals.id"), nullable=False)
     user_id = Column(Integer, ForeignKey("users.id"), nullable=False)
 

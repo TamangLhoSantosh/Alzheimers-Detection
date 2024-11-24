@@ -6,7 +6,12 @@ from email_utils import send_verification_email
 
 
 # Retrieve all users from the database
-def get_all(db: Session):
+def get_all(hospital_id: int, db: Session):
+    if hospital_id:
+        users = (
+            db.query(models.User).filter(models.User.hospital_id == hospital_id).all()
+        )
+        return users
     users = db.query(models.User).all()
     return users
 
@@ -69,7 +74,7 @@ async def create(request: schemas.UserCreate, bg_task: BackgroundTasks, db: Sess
     )
 
     # Send verification email in the background
-    bg_task.add_task(send_verification_email, new_user.email, verification_token)
+    # bg_task.add_task(send_verification_email, new_user.email, verification_token)
 
     return new_user
 
@@ -83,3 +88,43 @@ def show(db: Session, id: int):
             detail=f"User with id {id} is not available",
         )
     return user
+
+
+# Update a user by ID
+def update(db: Session, id: int, request: schemas.UserShow):
+    user = db.query(models.User).filter(models.User.id == id)
+    if not user.first():
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail=f"User with id {id} is not available",
+        )
+    user.update(
+        {
+            "username": request.username,
+            "first_name": request.first_name,
+            "middle_name": request.middle_name,
+            "last_name": request.last_name,
+            "dob": request.dob,
+            "address": request.address,
+            "contact": request.contact,
+            "email": request.email,
+            "is_admin": request.is_admin,
+            "is_hospital_admin": request.is_hospital_admin,
+            "updated_at": datetime.datetime.now(),
+        }
+    )
+    db.commit()
+    return request
+
+
+# Delete a user by ID
+def delete(id: int, db: Session):
+    user = db.query(models.User).filter(models.User.id == id).first()
+    if not user:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail=f"User with id {id} is not available",
+        )
+    db.delete(user)
+    db.commit()
+    return {"message": "User deleted successfully"}
