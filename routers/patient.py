@@ -25,7 +25,7 @@ def get_patients(
         oauth2.get_current_user
     ),  # OAuth2 dependency to verify the current user
 ):
-    return patient.get_all(db)
+    return patient.get_all_hospital(hospital_id, db)
 
 
 # Endpoint to create a new patient
@@ -97,15 +97,13 @@ def delete_patient(
 
 
 # Create a new router for all patients across all hospitals
-router = APIRouter(prefix="/patient", tags=["Patients"])
+router_all_patients = APIRouter(prefix="/patient", tags=["Patients"])
 
 
 # Endpoint to retrieve all patients across all hospitals
-# - Uses GET method and returns a list of patients
-# Return all patients in the system
-@router.get("/", response_model=List[schemas.Patient])
+@router_all_patients.get("/", response_model=List[schemas.Patient])
 def get_all_patients(
     db: Session = Depends(get_db),
-    # current_user: schemas.UserBase = Depends(oauth2.get_current_user),
+    # current_user: schemas.UserBase = Depends(oauth2.get_admin_user),
 ):
     return patient.get_all(db)

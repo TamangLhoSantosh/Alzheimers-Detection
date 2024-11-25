@@ -43,6 +43,7 @@ app.include_router(authenticate.router)
 app.include_router(hospital.router)
 
 app.include_router(patient.router)
+app.include_router(patient.router_all_patients)
 
 app.include_router(test_image.router)
 

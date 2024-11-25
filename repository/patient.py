@@ -9,6 +9,21 @@ def get_all(db: Session):
     return patients
 
 
+# Retrieve all patients of specific hopstial from the database
+def get_all_hospital(hospital_id: int, db: Session):
+    hospital = (
+        db.query(models.Hospital).filter(models.Hospital.id == hospital_id).first()
+    )
+    if not hospital:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND, detail="Hospital not found"
+        )
+    patients = (
+        db.query(models.Patient).filter(models.Patient.hospital_id == hospital_id).all()
+    )
+    return patients
+
+
 # Add patient to the database
 def create(
     hospital_id: int,
