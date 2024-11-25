@@ -93,6 +93,7 @@ class PatientBase(BaseModel):
     gender: str
     contact: str
     address: str
+    hospital_id: int
 
 
 class PatientCreate(PatientBase):

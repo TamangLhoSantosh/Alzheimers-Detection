@@ -40,7 +40,7 @@ def decode_token(token: str) -> dict:
         payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
         return payload
     except JWTError:
-        raise_credentials_exception()
+        raise_credentials_exception(detail="Token is invalid")
 
 
 def get_user_from_email(email: str, db: Session) -> models.User:
