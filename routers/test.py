@@ -15,7 +15,9 @@ get_db = database.get_db
 
 
 # Endpoint to create a test
-@router.post("/", status_code=status.HTTP_201_CREATED)
+@router.post(
+    "/", status_code=status.HTTP_201_CREATED, response_model=schemas.TestCreate
+)
 async def create_test(
     hospital_id: int,
     patient_id: int,
@@ -29,7 +31,7 @@ async def create_test(
 
 
 # Endpoint to fetch all tests for a specific patient
-@router.get("/")
+@router.get("/", response_model=list[schemas.Test])
 def show_tests(
     hospital_id: int,
     patient_id: int,
@@ -42,7 +44,7 @@ def show_tests(
 
 
 # Endpoint to fetch a specific test by ID
-@router.get("/{id}")
+@router.get("/{id}", response_model=schemas.Test)
 def show_test(
     hospital_id: int,
     patient_id: int,
@@ -56,7 +58,7 @@ def show_test(
 
 
 # Endpoint to update the result of a specific test
-@router.put("/{id}/result")
+@router.put("/{id}/result", response_model=schemas.Test)
 def update_test_result(
     hospital_id: int,
     patient_id: int,
