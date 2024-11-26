@@ -1,13 +1,13 @@
-from fastapi import APIRouter, Depends, status
+from fastapi import APIRouter, Depends, status, HTTPException
 from sqlalchemy.orm import Session
 
-# from repository
-import database, oauth2
+from repository import test
+import database, schemas, oauth2
 
-# Initialize the APIRouter for test image-related endpoints with a dynamic hospital and patient ID
+# Initialize the APIRouter for test-related endpoints
 router = APIRouter(
-    prefix="/hospital/{hospital_id}/patient/{patient_id}/test",  # URL prefix for endpoints
-    tags=["Test"],  # Tag for organizing related endpoints
+    prefix="/hospital/{hospital_id}/patient/{patient_id}/test",
+    tags=["Test"],
 )
 
 # Dependency to get the database session
@@ -15,25 +15,56 @@ get_db = database.get_db
 
 
 # Endpoint to create a test
-# - Uses POST method and returns HTTP 201 (created) status code upon success
-# Return the created test
-@router.post(
-    "/",
-    status_code=status.HTTP_201_CREATED,
-)
-async def createTest():
-    return {"message": "Test created successfully"}
+@router.post("/", status_code=status.HTTP_201_CREATED)
+async def create_test(
+    hospital_id: int,
+    patient_id: int,
+    description: str,
+    db: Session = Depends(get_db),
+    current_user: schemas.UserBase = Depends(
+        oauth2.get_current_user
+    ),  # OAuth2 dependency to verify the current user
+):
+    return test.create_test(db, description, patient_id)
 
 
-# Endpoint to fetch all test for a specific patient
-# - Uses GET method and returns a list of test images
+# Endpoint to fetch all tests for a specific patient
 @router.get("/")
-def show_tests():
-    return {"message": "Test fetched successfully"}
+def show_tests(
+    hospital_id: int,
+    patient_id: int,
+    db: Session = Depends(get_db),
+    current_user: schemas.UserBase = Depends(
+        oauth2.get_current_user
+    ),  # OAuth2 dependency to verify the current user
+):
+    return test.get_tests(db, patient_id)
 
 
-# Endpoint to fetch a specific test image by ID
-# - Uses GET method and returns the details of the specified test image
+# Endpoint to fetch a specific test by ID
 @router.get("/{id}")
-def show_test():
-    return {"message": "Test fetched successfully"}
+def show_test(
+    hospital_id: int,
+    patient_id: int,
+    id: int,
+    db: Session = Depends(get_db),
+    current_user: schemas.UserBase = Depends(
+        oauth2.get_current_user
+    ),  # OAuth2 dependency to verify the current user
+):
+    return test.get_test_by_id(db, id)
+
+
+# Endpoint to update the result of a specific test
+@router.put("/{id}/result")
+def update_test_result(
+    hospital_id: int,
+    patient_id: int,
+    id: int,
+    result: str,
+    db: Session = Depends(get_db),
+    current_user: schemas.UserBase = Depends(
+        oauth2.get_current_user
+    ),  # OAuth2 dependency to verify the current user
+):
+    return test.update_test_result(db, id, result)
