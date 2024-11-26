@@ -65,16 +65,10 @@ def create_access_token(
     )
 
     # Define the payload for the JWT
-    payload = {
-        "sub": data.get("sub"),
-        "is_admin": data.get("is_admin"),
-        "is_hospital_admin": data.get("is_hospital_admin"),
-        "hospital_id": data.get("hospital_id"),
-        "exp": datetime.now(timezone.utc) + expire,
-        "jti": str(uuid.uuid4()),
-        "iat": datetime.now(timezone.utc),
-        "refresh": refresh,
-    }
+    payload = data.copy()
+    payload["iat"] = datetime.now(timezone.utc)
+    payload["exp"] = datetime.now(timezone.utc) + expire
+    payload["refresh"] = refresh
 
     # Encode the payload into a JWT
     token = jwt.encode(payload, SECRET_KEY, algorithm=ALGORITHM)
@@ -150,5 +144,4 @@ def verify_refresh_token(
     # Return the new access token
     return {
         "access_token": new_access_token,
-        "token_type": "bearer",
     }
