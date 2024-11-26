@@ -54,16 +54,13 @@ def list_users(
         oauth2.get_current_user
     ),  # OAuth2 dependency to verify the current user
 ):
-    print("method")
     return user.get_all(hospital_id, db)
 
 
 # Endpoint to update user by ID
 # - Uses PUT method and returns HTTP 202 (accepted) status code upon success
 # - Request model: `schemas.UserShow` - to ensure the request body structure
-@router.put(
-    "/{id}", status_code=status.HTTP_202_ACCEPTED, response_model=schemas.UserShow
-)
+@router.put("/{id}", response_model=schemas.UserShow)
 def update_user(
     id: int,  # The user ID passed in the URL path
     request: schemas.UserShow,  # Request body that must match the `UserShow` schema

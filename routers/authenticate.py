@@ -109,4 +109,4 @@ def refresh_token(
     db: Session = Depends(database.get_db),  # Database session dependency injected here
 ):
     # Call the function to verify the refresh token and generate a new access token
-    return JWTtoken.verify_refresh_token(refresh_token, db)
+    return JWTtoken.verify_refresh_token(refresh_token.refresh_token, db)
