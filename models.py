@@ -6,22 +6,21 @@ from sqlalchemy import (
     Date,
     ForeignKey,
     TIMESTAMP,
-    text,
+    func,
 )
 from sqlalchemy.orm import relationship
 from database import Base
 
 
-# User model representing users of the system.
-# It contains basic user information and role identifiers (admin, hospital admin).
-# Users can belong to hospitals and are linked to multiple patients.
+# User model representing system users.
+# It contains personal details, contact information, role flags, and relationships to hospitals and patients.
 class User(Base):
     __tablename__ = "users"
 
     id = Column(Integer, primary_key=True, index=True)
     username = Column(String(100), unique=True, index=True)
     first_name = Column(String(100), nullable=False)
-    middle_name = Column(String(100))
+    middle_name = Column(String(100), nullable=True)
     last_name = Column(String(100), nullable=False)
     dob = Column(Date, nullable=False)
     gender = Column(String(100), nullable=False)
@@ -31,8 +30,15 @@ class User(Base):
     password = Column(String(100), nullable=False)
     is_admin = Column(Boolean, default=False)
     is_hospital_admin = Column(Boolean, default=False)
-    created_at = Column(Date, nullable=False, default=text("now()"))
-    updated_at = Column(Date, nullable=False, default=text("now()"))
+    created_at = Column(
+        TIMESTAMP(timezone=True), server_default=func.now(), nullable=False
+    )
+    updated_at = Column(
+        TIMESTAMP(timezone=True),
+        server_default=func.now(),
+        onupdate=func.now(),
+        nullable=False,
+    )
     hospital_id = Column(Integer, ForeignKey("hospitals.id"), nullable=True)
     is_verified = Column(Boolean, default=False)
 
@@ -40,8 +46,8 @@ class User(Base):
     patients = relationship("Patient", back_populates="user")
 
 
-# Hospital model representing hospitals in the system.
-# Hospitals can have multiple users and multiple patients.
+# Hospital model representing medical institutions.
+# It includes hospital details and relationships to users and patients.
 class Hospital(Base):
     __tablename__ = "hospitals"
 
@@ -50,51 +56,82 @@ class Hospital(Base):
     address = Column(String(100), nullable=False)
     contact = Column(String(100), nullable=False)
     email = Column(String(100), unique=True, index=True, nullable=True)
-    created_at = Column(TIMESTAMP(timezone=True), nullable=False, default=text("now()"))
-    updated_at = Column(Date, nullable=False, default=text("now()"))
+    created_at = Column(
+        TIMESTAMP(timezone=True), server_default=func.now(), nullable=False
+    )
+    updated_at = Column(
+        TIMESTAMP(timezone=True),
+        server_default=func.now(),
+        onupdate=func.now(),
+        nullable=False,
+    )
 
     users = relationship("User", back_populates="hospital")
     patients = relationship("Patient", back_populates="hospital")
 
 
-# Patient model representing patients linked to a hospital and user.
-# Patients can have test images uploaded for analysis.
+# Patient model representing individuals receiving medical care.
+# Includes personal details, hospital association, and test images.
 class Patient(Base):
     __tablename__ = "patients"
 
     id = Column(Integer, primary_key=True, index=True)
     first_name = Column(String(100), nullable=False)
-    middle_name = Column(String(100))
+    middle_name = Column(String(100), nullable=True)
     last_name = Column(String(100), nullable=False)
     dob = Column(Date, nullable=False)
     gender = Column(String(100), nullable=False)
     contact = Column(String(100), nullable=False)
     address = Column(String(100), nullable=False)
-    created_at = Column(Date, nullable=False, default=text("now()"))
-    update_at = Column(Date, nullable=False, default=text("now()"))
+    created_at = Column(
+        TIMESTAMP(timezone=True), server_default=func.now(), nullable=False
+    )
+    updated_at = Column(
+        TIMESTAMP(timezone=True),
+        server_default=func.now(),
+        onupdate=func.now(),
+        nullable=False,
+    )
     hospital_id = Column(Integer, ForeignKey("hospitals.id"), nullable=False)
     user_id = Column(Integer, ForeignKey("users.id"), nullable=False)
 
     hospital = relationship("Hospital", back_populates="patients")
     user = relationship("User", back_populates="patients")
+    tests = relationship("Test", back_populates="patient")
     test_images = relationship("TestImage", back_populates="patient")
 
 
-# TestImage model representing medical images uploaded for a patient.
-# These images are used for testing and analysis.
+# Test model representing medical tests assigned to a patient.
+# It contains test description and the result (nullable), along with the relationship to the patient.
+class Test(Base):
+    __tablename__ = "tests"
+
+    id = Column(Integer, primary_key=True, index=True)
+    description = Column(String, nullable=True)
+    result = Column(String, nullable=True)
+    patient_id = Column(Integer, ForeignKey("patients.id"), nullable=False)
+
+    patient = relationship("Patient", back_populates="tests")
+    test_images = relationship("TestImage", back_populates="test")
+
+
+# TestImage model representing medical images uploaded for testing.
+# These images are analyzed for diagnostic purposes.
 class TestImage(Base):
     __tablename__ = "test_images"
 
     id = Column(Integer, primary_key=True, index=True)
     image_url = Column(String(2048), nullable=False)
+    test_id = Column(Integer, ForeignKey("tests.id"), nullable=False)
     patient_id = Column(Integer, ForeignKey("patients.id"), nullable=False)
 
+    test = relationship("Test", back_populates="test_images")
     patient = relationship("Patient", back_populates="test_images")
     result_images = relationship("ResultImage", back_populates="test_image")
 
 
-# ResultImage model representing the analysis or result images generated from a test image.
-# These are the output images after analysis.
+# ResultImage model representing images generated after analyzing test images.
+# These are the diagnostic output images.
 class ResultImage(Base):
     __tablename__ = "result_images"
 
