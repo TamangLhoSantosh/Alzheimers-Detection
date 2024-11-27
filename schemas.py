@@ -110,6 +110,29 @@ class Patient(PatientBase):
         from_attributes = True  # Allows the use of attributes from the database
 
 
+class TestBase(BaseModel):
+    """Base model for test-related information."""
+
+    description: str
+    result: Optional[str] = None
+    patient_id: int
+
+
+class TestCreate(TestBase):
+    """Model for creating a new test, extending TestBase."""
+
+    pass
+
+
+class Test(TestBase):
+    """Model for displaying test information, including an ID."""
+
+    id: int
+
+    class Config:
+        from_attributes = True  # Allows the use of attributes from the database
+
+
 class TestImageBase(BaseModel):
     """Base model for test image-related information."""
 
