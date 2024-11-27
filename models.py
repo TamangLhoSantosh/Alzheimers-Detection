@@ -107,8 +107,8 @@ class Test(Base):
     __tablename__ = "tests"
 
     id = Column(Integer, primary_key=True, index=True)
-    description = Column(String, nullable=True)
-    result = Column(String, nullable=True)
+    description = Column(String(2048), nullable=True)
+    result = Column(String(2048), nullable=True)
     patient_id = Column(Integer, ForeignKey("patients.id"), nullable=False)
 
     patient = relationship("Patient", back_populates="tests")

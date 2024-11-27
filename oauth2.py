@@ -5,7 +5,7 @@ import JWTtoken, schemas, database
 
 # OAuth2PasswordBearer is a FastAPI dependency that retrieves the token from the request.
 # This will be used to extract the token from the Authorization header.
-oauth2_scheme = OAuth2PasswordBearer(tokenUrl="login")
+oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/auth/login")
 
 
 def get_current_user(
