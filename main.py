@@ -8,6 +8,7 @@ from routers import (
     authenticate,
     hospital,
     patient,
+    test,
     test_image,
     result_image,
     password_reset,
@@ -44,6 +45,8 @@ app.include_router(hospital.router)
 
 app.include_router(patient.router)
 app.include_router(patient.router_all_patients)
+
+app.include_router(test.router)
 
 app.include_router(test_image.router)
 
