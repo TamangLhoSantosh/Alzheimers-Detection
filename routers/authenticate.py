@@ -73,8 +73,14 @@ def login(
         refresh=True,
     )
 
-    # User's full name to send
-    userName = user.first_name + user.middle_name + user.last_name
+    # User's details to be returned in the response
+    user = {
+        "id": user.id,
+        "email": user.email,
+        "is_admin": user.is_admin,
+        "is_hospital_admin": user.is_hospital_admin,
+        "hospital_id": user.hospital_id,
+    }
 
     # Return a JSON response with the tokens and user information
     return {
