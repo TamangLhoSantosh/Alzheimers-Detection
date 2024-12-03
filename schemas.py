@@ -116,7 +116,6 @@ class TestBase(BaseModel):
 
     description: str
     result: Optional[str] = None
-    patient_id: int
 
 
 class TestCreate(TestBase):

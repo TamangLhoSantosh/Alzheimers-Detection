@@ -21,13 +21,13 @@ get_db = database.get_db
 async def create_test(
     hospital_id: int,
     patient_id: int,
-    description: str,
+    request: schemas.TestCreate,
     db: Session = Depends(get_db),
     current_user: schemas.UserBase = Depends(
         oauth2.get_current_user
     ),  # OAuth2 dependency to verify the current user
 ):
-    return test.create_test(db, description, patient_id)
+    return test.create_test(db, request, patient_id)
 
 
 # Endpoint to fetch all tests for a specific patient

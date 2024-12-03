@@ -77,19 +77,12 @@ def login(
     userName = user.first_name + user.middle_name + user.last_name
 
     # Return a JSON response with the tokens and user information
-    return JSONResponse(
-        content={
-            "message": "Login Successful",
-            "access_token": access_token,
-            "refresh_token": refresh_token,
-            "is_admin": user.is_admin,
-            "is_hospital_admin": user.is_hospital_admin,
-            "user": userName,
-            "hospital_id": user.hospital_id,
-            "token_type": "bearer",
-        },
-        status_code=status.HTTP_200_OK,
-    )
+    return {
+        "message": "Login Successful",
+        "access_token": access_token,
+        "refresh_token": refresh_token,
+        "user": user,
+    }
 
 
 # Endpoint to verify user email via a token
