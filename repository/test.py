@@ -1,13 +1,13 @@
 from fastapi import HTTPException
 from sqlalchemy.orm import Session
-import models
+import models, schemas
 
 
 # Create a new test entry for a patient
-def create_test(db: Session, description: str, patient_id: int):
+def create_test(db: Session, request: schemas.TestCreate, patient_id: int):
     # Create a new Test record
     new_test = models.Test(
-        description=description,
+        description=request.description,
         patient_id=patient_id,
     )
 
