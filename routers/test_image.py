@@ -6,7 +6,7 @@ import schemas, database, oauth2
 
 # Initialize the APIRouter for test image-related endpoints with a dynamic hospital and patient ID
 router = APIRouter(
-    prefix="/hospital/{hospital_id}/patient/{patient_id}/test_image",  # URL prefix for endpoints
+    prefix="/hospital/{hospital_id}/patient/{patient_id}/test/{test_id}/test_image",  # URL prefix for endpoints
     tags=["Test Images"],  # Tag for organizing related endpoints
 )
 
@@ -23,6 +23,7 @@ get_db = database.get_db
 )
 async def upload_test_image(
     hospital_id: int,  # Hospital ID from the URL path
+    test_id: int,  # Test ID from the URL path
     patient_id: int,  # Patient ID from the URL path
     image: UploadFile,  # Uploaded image file
     db: Session = Depends(get_db),  # Database session dependency injected here
@@ -30,7 +31,7 @@ async def upload_test_image(
         oauth2.get_current_user
     ),  # OAuth2 dependency to verify the current user
 ):
-    return await test_image.create(db, image, patient_id)
+    return await test_image.create(db, image, test_id, patient_id)
 
 
 # Endpoint to fetch all test images for a specific patient
@@ -40,6 +41,7 @@ async def upload_test_image(
 )  # Response model specifies the structure of returned data
 def show_test_images(
     hospital_id: int,  # Hospital ID from the URL path
+    test_id: int,  # Test ID from the URL path
     patient_id: int,  # Patient ID from the URL path
     db: Session = Depends(get_db),  # Database session dependency injected here
     current_user: schemas.UserShow = Depends(
@@ -56,6 +58,7 @@ def show_test_images(
 )  # Path parameter `{id}` to specify the test image ID
 def show_test_image(
     hospital_id: int,  # Hospital ID from the URL path
+    test_id,  # Test ID from the URL path
     patient_id: int,  # Patient ID from the URL path
     id: int,  # Test image ID passed in the URL path
     db: Session = Depends(get_db),  # Database session dependency injected here

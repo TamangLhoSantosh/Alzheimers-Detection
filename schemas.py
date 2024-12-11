@@ -8,7 +8,7 @@ class UserBase(BaseModel):
 
     username: str
     first_name: str
-    middle_name: str
+    middle_name: Optional[str]
     last_name: str
     dob: datetime  # Date of birth
     gender: str
@@ -102,15 +102,6 @@ class PatientCreate(PatientBase):
     pass
 
 
-class Patient(PatientBase):
-    """Model for displaying patient information, including an ID and creation timestamp."""
-
-    id: int
-
-    class Config:
-        from_attributes = True  # Allows the use of attributes from the database
-
-
 class TestBase(BaseModel):
     """Base model for test-related information."""
 
@@ -122,15 +113,6 @@ class TestCreate(TestBase):
     """Model for creating a new test, extending TestBase."""
 
     pass
-
-
-class Test(TestBase):
-    """Model for displaying test information, including an ID."""
-
-    id: int
-
-    class Config:
-        from_attributes = True  # Allows the use of attributes from the database
 
 
 class TestImageBase(BaseModel):
@@ -150,6 +132,26 @@ class TestImage(TestImageBase):
     """Model for displaying test image information, including an ID."""
 
     id: int
+
+    class Config:
+        from_attributes = True  # Allows the use of attributes from the database
+
+
+class Test(TestBase):
+    """Model for displaying test information, including an ID."""
+
+    id: int
+    test_images: Optional[List[TestImage]] = []
+
+    class Config:
+        from_attributes = True  # Allows the use of attributes from the database
+
+
+class Patient(PatientBase):
+    """Model for displaying patient information, including an ID and creation timestamp."""
+
+    id: int
+    tests: Optional[List[Test]] = []
 
     class Config:
         from_attributes = True  # Allows the use of attributes from the database

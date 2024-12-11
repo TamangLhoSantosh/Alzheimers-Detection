@@ -1,5 +1,6 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
+from starlette.staticfiles import StaticFiles
 
 import models
 from database import engine
@@ -19,6 +20,12 @@ app = FastAPI()
 
 # Create all database tables (if not already created) using SQLAlchemy models
 models.Base.metadata.create_all(engine)
+
+# Mounts the 'media' directory to the '/media' URL path.
+app.mount("/media", StaticFiles(directory="media"), name="media")
+
+# URL of the second FastAPI program (Analysis Service)
+ANALYSIS_URL = "http://localhost:8080/predict"
 
 # Add CORS middleware
 origins = [
