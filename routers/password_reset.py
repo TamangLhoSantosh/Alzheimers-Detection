@@ -22,11 +22,11 @@ get_db = database.get_db
 # Return success message
 @router.post("/request")
 async def password_reset_request(
-    email: str,  # The email address of the user requesting a password reset
+    request: schemas.PasswordResetRequest,  # Request body that must match the `PasswordResetRequest` schema
     bg_task: BackgroundTasks,  # Background tasks to send mail
     db: Session = Depends(get_db),  # Database session dependency injected here
 ):
-    return await password_rest.password_reset_request(email, bg_task, db)
+    return await password_rest.password_reset_request(request, bg_task, db)
 
 
 # Endpoint to confirm a password reset

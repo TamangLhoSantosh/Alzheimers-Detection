@@ -74,7 +74,7 @@ async def create(request: schemas.UserCreate, bg_task: BackgroundTasks, db: Sess
     )
 
     # Send verification email in the background
-    # bg_task.add_task(send_verification_email, new_user.email, verification_token)
+    bg_task.add_task(send_verification_email, new_user.email, verification_token)
 
     return new_user
 
