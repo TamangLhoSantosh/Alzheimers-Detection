@@ -52,15 +52,18 @@ def update(request: schemas.Hospital, db: Session):
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND, detail="Hospital not found"
         )
-
-    hospital_email = (
-        db.query(models.Hospital).filter(models.Hospital.email == request.email).first()
-    )
-    if hospital_email:
-        raise HTTPException(
-            status_code=status.HTTP_400_BAD_REQUEST,
-            detail="Hospital with this email already exists",
+    if hospital.email != request.email:
+        hospital_email = (
+            db.query(models.Hospital)
+            .filter(models.Hospital.email == request.email)
+            .first()
         )
+        if hospital_email:
+            raise HTTPException(
+                status_code=status.HTTP_400_BAD_REQUEST,
+                detail="Hospital with this email already exists",
+            )
+
     # Update hospital details
     hospital.name = request.name
     hospital.address = request.address
