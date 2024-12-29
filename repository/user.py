@@ -98,6 +98,20 @@ def update(db: Session, id: int, request: schemas.UserShow):
             status_code=status.HTTP_404_NOT_FOUND,
             detail=f"User with id {id} is not available",
         )
+    username = (
+        db.query(models.User).filter(models.User.username == request.username).first()
+    )
+    if username:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail=f"User with username {request.username} already exists",
+        )
+    email = db.query(models.User).filter(models.User.email == request.email).first()
+    if email:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail=f"User with email {request.email} already exists",
+        )
     user.update(
         {
             "username": request.username,
