@@ -53,7 +53,7 @@ async def send_verification_email(email: str, token: str):
 
 async def send_reset_email(email: str, token: str):
     # Create a password reset link using the provided token
-    reset_link = f"http://localhost:5173/password-reset/confirm?token={token}"
+    reset_link = f"http://localhost:5173/password-reset/confirm/{token}"
     subject = "Password Reset"
     body = f"""
     <h1>Reset Your Password</h1>

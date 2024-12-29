@@ -92,7 +92,7 @@ def login(
 
 
 # Endpoint to verify user email via a token
-@router.get("/verify-email/")
+@router.get("/verify-email")
 def verify_user_account(
     token: str = Query(...),  # Expects a token as a query parameter
     db: Session = Depends(database.get_db),  # Database session dependency injected here
