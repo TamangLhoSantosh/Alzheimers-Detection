@@ -5,9 +5,11 @@ import models, JWTtoken, email_utils, schemas, hashing
 
 
 # Send mail to the user requesting password reset
-async def password_reset_request(email: str, bg_task: BackgroundTasks, db: Session):
+async def password_reset_request(
+    request: schemas.PasswordResetRequest, bg_task: BackgroundTasks, db: Session
+):
     # Retrieve user by email
-    user = db.query(models.User).filter(models.User.email == email).first()
+    user = db.query(models.User).filter(models.User.email == request.email).first()
 
     if user is None:
         raise HTTPException(
@@ -24,11 +26,11 @@ async def password_reset_request(email: str, bg_task: BackgroundTasks, db: Sessi
 
     # Generate a JWT token for password reset
     reset_token = JWTtoken.create_access_token(
-        data={"sub": email}, expires_delta=expires_delta
+        data={"sub": request.email}, expires_delta=expires_delta
     )
 
     # Schedule the email sending task in the background
-    bg_task.add_task(email_utils.send_reset_email, email, reset_token)
+    bg_task.add_task(email_utils.send_reset_email, request.email, reset_token)
 
     return {"message": "Please check your email"}
 

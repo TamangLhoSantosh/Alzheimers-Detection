@@ -11,7 +11,6 @@ from routers import (
     patient,
     test,
     test_image,
-    result_image,
     password_reset,
 )
 from middleware.hospital_access import HospitalAccessMiddleware
@@ -56,7 +55,5 @@ app.include_router(patient.router_all_patients)
 app.include_router(test.router)
 
 app.include_router(test_image.router)
-
-app.include_router(result_image.router)
 
 app.include_router(password_reset.router)

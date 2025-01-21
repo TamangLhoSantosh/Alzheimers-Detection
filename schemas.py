@@ -157,28 +157,6 @@ class Patient(PatientBase):
         from_attributes = True  # Allows the use of attributes from the database
 
 
-class ResultImageBase(BaseModel):
-    """Base model for result image-related information."""
-
-    image_url: str
-    test_image_id: int
-
-
-class ResultImageCreate(ResultImageBase):
-    """Model for creating a new result image, extending ResultImageBase."""
-
-    pass
-
-
-class ResultImage(ResultImageBase):
-    """Model for displaying result image information, including an ID."""
-
-    id: int
-
-    class Config:
-        from_attributes = True  # Allows the use of attributes from the database
-
-
 class PasswordReset(BaseModel):
     """Model for initiating a password reset."""
 

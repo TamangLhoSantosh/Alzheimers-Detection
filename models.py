@@ -23,8 +23,8 @@ class User(Base):
     middle_name = Column(String(100), nullable=True)
     last_name = Column(String(100), nullable=False)
     dob = Column(Date, nullable=False)
-    gender = Column(String(100), nullable=False)
-    contact = Column(String(100), nullable=False)
+    gender = Column(String(10), nullable=False)
+    contact = Column(String(10), nullable=False)
     address = Column(String(100), nullable=False)
     email = Column(String(100), unique=True, index=True)
     password = Column(String(100), nullable=False)
@@ -54,7 +54,7 @@ class Hospital(Base):
     id = Column(Integer, primary_key=True, index=True)
     name = Column(String(100), nullable=False)
     address = Column(String(100), nullable=False)
-    contact = Column(String(100), nullable=False)
+    contact = Column(String(10), nullable=False)
     email = Column(String(100), unique=True, index=True, nullable=True)
     created_at = Column(
         TIMESTAMP(timezone=True), server_default=func.now(), nullable=False
@@ -80,8 +80,8 @@ class Patient(Base):
     middle_name = Column(String(100), nullable=True)
     last_name = Column(String(100), nullable=False)
     dob = Column(Date, nullable=False)
-    gender = Column(String(100), nullable=False)
-    contact = Column(String(100), nullable=False)
+    gender = Column(String(10), nullable=False)
+    contact = Column(String(10), nullable=False)
     address = Column(String(100), nullable=False)
     created_at = Column(
         TIMESTAMP(timezone=True), server_default=func.now(), nullable=False
@@ -107,8 +107,8 @@ class Test(Base):
     __tablename__ = "tests"
 
     id = Column(Integer, primary_key=True, index=True)
-    description = Column(String(2048), nullable=True)
-    result = Column(String(2048), nullable=True)
+    description = Column(String(100), nullable=True)
+    result = Column(String(100), nullable=True)
     patient_id = Column(Integer, ForeignKey("patients.id"), nullable=False)
 
     patient = relationship("Patient", back_populates="tests")
@@ -127,16 +127,3 @@ class TestImage(Base):
 
     test = relationship("Test", back_populates="test_images")
     patient = relationship("Patient", back_populates="test_images")
-    result_images = relationship("ResultImage", back_populates="test_image")
-
-
-# ResultImage model representing images generated after analyzing test images.
-# These are the diagnostic output images.
-class ResultImage(Base):
-    __tablename__ = "result_images"
-
-    id = Column(Integer, primary_key=True, index=True)
-    image_url = Column(String(2048), nullable=False)
-    test_image_id = Column(Integer, ForeignKey("test_images.id"), nullable=False)
-
-    test_image = relationship("TestImage", back_populates="result_images")

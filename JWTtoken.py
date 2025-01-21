@@ -1,6 +1,5 @@
 import os
 from datetime import datetime, timedelta, timezone
-import uuid
 
 from fastapi import Depends, status, HTTPException
 from sqlalchemy.orm import Session
@@ -50,7 +49,7 @@ def get_user_from_email(email: str, db: Session) -> models.User:
     """
     user = db.query(models.User).filter(models.User.email == email).first()
     if user is None:
-        raise_credentials_exception("User Not Found")
+        raise_credentials_exception(status.HTTP_404_NOT_FOUND, "User Not Found")
     return user
 
 

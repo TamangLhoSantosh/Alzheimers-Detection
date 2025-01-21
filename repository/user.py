@@ -74,7 +74,7 @@ async def create(request: schemas.UserCreate, bg_task: BackgroundTasks, db: Sess
     )
 
     # Send verification email in the background
-    # bg_task.add_task(send_verification_email, new_user.email, verification_token)
+    bg_task.add_task(send_verification_email, new_user.email, verification_token)
 
     return new_user
 
@@ -92,28 +92,46 @@ def show(db: Session, id: int):
 
 # Update a user by ID
 def update(db: Session, id: int, request: schemas.UserShow):
-    user = db.query(models.User).filter(models.User.id == id)
-    if not user.first():
+    user = db.query(models.User).filter(models.User.id == id).first()
+    if not user:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,
             detail=f"User with id {id} is not available",
         )
-    user.update(
-        {
-            "username": request.username,
-            "first_name": request.first_name,
-            "middle_name": request.middle_name,
-            "last_name": request.last_name,
-            "dob": request.dob,
-            "address": request.address,
-            "contact": request.contact,
-            "email": request.email,
-            "is_admin": request.is_admin,
-            "is_hospital_admin": request.is_hospital_admin,
-            "updated_at": datetime.datetime.now(),
-        }
-    )
+
+    if user.username != request.username:
+        username = (
+            db.query(models.User)
+            .filter(models.User.username == request.username)
+            .first()
+        )
+        if username:
+            raise HTTPException(
+                status_code=status.HTTP_400_BAD_REQUEST,
+                detail=f"User with username {request.username} already exists",
+            )
+
+    if user.email != request.email:
+        email = db.query(models.User).filter(models.User.email == request.email).first()
+        if email:
+            raise HTTPException(
+                status_code=status.HTTP_400_BAD_REQUEST,
+                detail=f"User with email {request.email} already exists",
+            )
+
+    user.username = request.username
+    user.first_name = request.first_name
+    user.middle_name = request.middle_name
+    user.last_name = request.last_name
+    user.dob = request.dob
+    user.address = request.address
+    user.contact = request.contact
+    user.email = request.email
+    user.is_admin = request.is_admin
+    user.is_hospital_admin = request.is_hospital_admin
+    user.updated_at = datetime.datetime.now()
     db.commit()
+    db.refresh(user)
     return request
 
 
